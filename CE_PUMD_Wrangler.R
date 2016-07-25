@@ -538,3 +538,31 @@ subsetByHousingTenure <- function(dataframe, tenure, specialColumnName = NULL){
   }
   return(dataframe)
 }
+
+# Function that returns a data frame subset by marital status
+# Parameters
+## dataframe: data frame, the data frame of which you want to subset
+## status: integer vector, marital status of reference person
+### 1 Married
+### 2 Widowed
+### 3 Divorced
+### 4 Separated
+### 5 Never married
+## specialColumnName: string, the name of the column that contains the Marital Status variable
+subsetByMaritalStatus <- function(dataframe, status, specialColumnName = NULL){
+  rownames(dataframe) <-NULL
+  if(!is.null(specialColumnName)){
+    if(!(specialColumnName %in% colnames(dataframe))){
+      cat("The special column name is not a column name in the data frame.\n")
+    } else {
+      dataframe <- dataframe[which(dataframe[,specialColumnName] %in% status),]
+    }
+  } else {
+    if(!("MARITAL1" %in% colnames(dataframe))){
+      cat("The standard column names were not found please input a specialColumnName next time.\n")
+    } else {
+      dataframe <- dataframe[which(dataframe$MARITAL1 %in% status),]
+    }
+  }
+  return(dataframe)
+}
