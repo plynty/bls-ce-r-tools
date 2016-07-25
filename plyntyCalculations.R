@@ -6,7 +6,7 @@ rm(list=ls())
 ##################
 
 # The directory in which you are working
-my_dir <- "~/"
+my_dir <- "~/bls-ce-r-tools/"
 
 year <- 2014
 
@@ -17,14 +17,14 @@ maxAge <- 64
 # Income brackets
 incomeBrackets <- c(0,5000,10000,15000,20000,30000,40000,50000,70000)
 
-setwd(my_dir)
-
-# Loading functions from CE_PUMD_Wrangler.R
-source(paste0(my_dir,"/bls-ce-r-tools/CE_PUMD_Wrangler.R"))
-
 #####################################
 ### Reading in the necessary Data ###
 #####################################
+
+setwd(my_dir)
+
+# Loading functions from CE_PUMD_Wrangler.R
+source("CE_PUMD_Wrangler.R")
 
 fmly <- readCEData("fmli")
 
