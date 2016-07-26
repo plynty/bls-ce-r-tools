@@ -305,10 +305,10 @@ subsetByRegionType <- function(dataframe, housingType, specialColumnName = NULL)
       dataframe <- dataframe[which(dataframe[,specialColumnName] == housingType),]
     }
   } else {
-    if(!("BLS_URBAN" %in% colnames(dataframe))){
+    if(!("BLS_URBN" %in% colnames(dataframe))){
       cat("The standard column names were not found please input a specialColumnName next time.\n")
     } else {
-      dataframe <- dataframe[which(dataframe$BLS_URBAN == housingType),]
+      dataframe <- dataframe[which(dataframe$BLS_URBN == housingType),]
     }
   }
   return(dataframe)
