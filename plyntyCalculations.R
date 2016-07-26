@@ -15,7 +15,7 @@ minAge <- 55
 maxAge <- 64
 
 # Income brackets
-incomeBrackets <- c(0,5000,10000,15000,20000,30000,40000,50000,70000)
+incomeBrackets <- c(5000,10000,15000,20000,30000,40000,50000,70000)
 
 #####################################
 ### Reading in the necessary Data ###
