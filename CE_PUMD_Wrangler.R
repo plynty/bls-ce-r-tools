@@ -195,6 +195,8 @@ convertStubFiles <- function(dir = stub_dir){
 ## reference: boolean, determing if you wish to subset for NEWID by reference person only
 ### if false the function will subset the dataframe to CUs that contain anyone in the age Range
 subsetByAge <- function(dataframe, minAge, maxAge, reference = TRUE){
+  dataframe <- as.data.frame(dataframe)
+  rownames(dataframe) <- NULL
   ageRange <- seq(minAge,maxAge)
   if(reference){
     #paying attention to the reference person only
@@ -213,6 +215,7 @@ subsetByAge <- function(dataframe, minAge, maxAge, reference = TRUE){
 ## incomeClassColumnName: string, the name of the Income class column in the dataframe
 ## specilaIBTColumnName: string, the name of the income before taxes column if not one of the standard column names
 changeIncomeClasses <- function(dataframe, incomeBreakpoints, incomeClassColumnName = "INCLASS", specialIBTColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <- NULL
   incomeBreakpoints <- c(-Inf,incomeBreakpoints,Inf)
   incomeBreakpoints <- sort(unique(incomeBreakpoints))
@@ -247,6 +250,7 @@ changeIncomeClasses <- function(dataframe, incomeBreakpoints, incomeClassColumnN
 ## maxIncome: double, the high end of the age range you wish to subset by
 ## specilColumnName: string, the name of the column that contians income for the data frame
 subsetByIncome <- function(dataframe, minIncome, maxIncome, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <- NULL
   # Determining if the there is a special ColumnName
   if(!is.null(specialColumnName)){
@@ -273,6 +277,7 @@ subsetByIncome <- function(dataframe, minIncome, maxIncome, specialColumnName = 
 ## sizeOfCU: vector, a vector containing integers of family size that you wish to subset
 ## specialColumnName: string, the name of the column that contains the size of the cu variable
 subsetByCUSize <- function(dataframe, sizeOfCU, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <- NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -297,6 +302,7 @@ subsetByCUSize <- function(dataframe, sizeOfCU, specialColumnName = NULL){
 ### 1 = Urban
 ### 2 = Rural
 subsetByRegionType <- function(dataframe, housingType, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -324,6 +330,7 @@ subsetByRegionType <- function(dataframe, housingType, specialColumnName = NULL)
 ### 3 = South
 ### 4 = West
 subsetByHousingRegion <- function(dataframe, housingRegion, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -354,6 +361,7 @@ subsetByHousingRegion <- function(dataframe, housingRegion, specialColumnName = 
 ### 6 = Spouse and others
 ### 7 = Others only
 subsetByEarningComp <- function(dataframe, earningComp, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -383,6 +391,7 @@ subsetByEarningComp <- function(dataframe, earningComp, specialColumnName = NULL
 ### 5 Native Hawaiian or Other Pacific Islander
 ### 6 Multi-race
 subsetByRace <- function(dataframe, race, reference = TRUE) {
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <- NULL
   if (reference) {
     if (!("REF_RACE" %in% colnames(dataframe))) {
@@ -407,9 +416,10 @@ subsetByRace <- function(dataframe, race, reference = TRUE) {
 # Function that returns a data frame subset for being Hispanic or not
 # Parameters
 ## dataframe: data frame, the data frame of which you want to subset
-## Hispanice: boolean, determines if you want to subset for Hispanic people or not
+## Hispanic: boolean, determines if you want to subset for Hispanic people or not
 ## Reference: boolean, determines if you want to subset my Hispanic for the reference person only
 subsetByHispanic <- function(dataframe, Hispanic = TRUE, reference = TRUE){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <- NULL
   if (reference) {
     if (!("HISP_REF" %in% colnames(dataframe))) {
@@ -420,7 +430,7 @@ subsetByHispanic <- function(dataframe, Hispanic = TRUE, reference = TRUE){
       if (Hispanic) {
         dataframe <- dataframe[which(dataframe[, "HISP_REF"] == 1), ]
       } else{
-        dataframe <- dataframe[which(dataframe[, "HISP_REF"] == 0), ]
+        dataframe <- dataframe[which(dataframe[, "HISP_REF"] == 2), ]
       }
     }
   } else {
@@ -434,7 +444,7 @@ subsetByHispanic <- function(dataframe, Hispanic = TRUE, reference = TRUE){
           dataframe[which(dataframe[, "HISP_REF"] == 1 | dataframe[, "HISP2"] == 1), ]
       } else{
         dataframe <-
-          dataframe[which(dataframe[, "HISP_REF"] == 0 | dataframe[, "HISP2"] == 0), ]
+          dataframe[which(dataframe[, "HISP_REF"] == 0 | dataframe[, "HISP2"] == 2), ]
       }
     }
   }
@@ -447,6 +457,7 @@ subsetByHispanic <- function(dataframe, Hispanic = TRUE, reference = TRUE){
 ## psuCode: integer vector, the code associated with the primary sampling unit/units *see diary or interveiw dictionary for codes*
 ## specialColumnName: string, the name of the column that contains the PSU variable
 subsetByPSU <- function(dataframe, psuCode, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -476,6 +487,7 @@ subsetByPSU <- function(dataframe, psuCode, specialColumnName = NULL){
 ### 6 Doing something else
 ### NA The reference person did work during the past 12 months
 subsetByWhyNoWork <- function(dataframe, whyNoWork){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <- NULL
   if ("INCNONW1" %in% colnames(dataframe)) {
     dataframe <- dataframe[which(dataframe$INCNONW1 %in% whyNoWork), ]
@@ -493,6 +505,7 @@ subsetByWhyNoWork <- function(dataframe, whyNoWork){
 ## numberOfVehicles: integer vector, the number of vehicles you wish to subset for
 ## specialColumnName: string, the name of the column that contains the Number of Vehicles variable
 subsetByNumVehichles <- function(dataframe, numberOfVehicles, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -522,6 +535,7 @@ subsetByNumVehichles <- function(dataframe, numberOfVehicles, specialColumnName 
 ### 6 Student housing
 ## specialColumnName: string, the name of the column that contains the Number of Vehicles variable
 subsetByHousingTenure <- function(dataframe, tenure, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
@@ -550,6 +564,7 @@ subsetByHousingTenure <- function(dataframe, tenure, specialColumnName = NULL){
 ### 5 Never married
 ## specialColumnName: string, the name of the column that contains the Marital Status variable
 subsetByMaritalStatus <- function(dataframe, status, specialColumnName = NULL){
+  dataframe <- as.data.frame(dataframe)
   rownames(dataframe) <-NULL
   if(!is.null(specialColumnName)){
     if(!(specialColumnName %in% colnames(dataframe))){
