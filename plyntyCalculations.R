@@ -15,7 +15,7 @@ minAge <- 55
 maxAge <- 64
 
 # Income brackets
-incomeBrackets <- c(5000,10000,15000,20000,30000,40000,50000,70000)
+incomeBrackets <- c(5000,15000,53000,77000,86000,120000,180000,240000)
 
 #####################################
 ### Reading in the necessary Data ###
@@ -213,4 +213,53 @@ percentageDF <- as.data.frame(percentageMatrix)
 rownames(percentageDF) <- percentageRowNames
 colnames(percentageDF) <- percentageColNames
 
-percentageDF <- t(percentageDF)
+################################################
+### Creating JSON File for use in plynty app ###
+################################################
+library.packages("df2json")
+setwd(my_dir)
+write(df2json(percentageDF), file = "plynty.json")
+
+#############################################################
+########## Deciding which income brackets to choose #########
+### Comment out if the income brackets are to your liking ###
+#############################################################
+
+# # Function that returns column number of which thtat column and the previous column are most alike
+# mostLikeColumns <- function(dataframe){
+#   smallestDiff <- Inf
+#   for(y in 2:ncol(dataframe)){
+#     difference <- 0
+#     for(x in 1:nrow(dataframe)){
+#       difference <- difference + (dataframe[x,y]-dataframe[x,y-1])
+#     }
+#     if(difference < smallestDiff){
+#       smallestDiff <- difference
+#       smallestDiffColumn <- y
+#     }
+#   }
+#   return(smallestDiffColumn)
+# }
+# 
+# # Function that returns a dataframe that has the most unique income brackets
+# automaticallyMinimizingColumns <- function(dataframe, numOfColsWeWant,incomeBrackets){
+#   for(i in 1:(ncol(dataframe)-numOfColsWeWant)){
+#     #getting the column number to combine with the column on the left
+#     colToCombine <- mostLikeColumns(dataframe = dataframe)
+#     #combining the values in the columns
+#     if(colToCombine == 2){
+#       dataframe <- cbind(((dataframe[,colToCombine] + dataframe[,colToCombine-1])/2),dataframe[,(colToCombine+1):ncol(dataframe)])
+#     } else if(colToCombine == ncol(dataframe)){
+#       dataframe <- cbind(dataframe[,1:(colToCombine-2)],((dataframe[,colToCombine] + dataframe[,colToCombine-1])/2))
+#     } else {
+#       dataframe <- cbind(dataframe[,1:(colToCombine-2)],((dataframe[,colToCombine] + dataframe[,colToCombine-1])/2),dataframe[,(colToCombine+1):ncol(dataframe)])
+#     }
+#     incomeBrackets <- incomeBrackets[-(colToCombine-1)]
+#     colnames(dataframe) <- createReadableIncomeBracketsVector(incomeBrackets = incomeBrackets)
+#   }
+#   return(dataframe)
+# }
+# 
+# test <- automaticallyMinimizingColumns(percentageDF, 9, incomeBrackets = incomeBrackets)
+# 
+# barplot(t(test), beside = TRUE, col = c("darkorange","deepskyblue","forestgreen","gold","darkorchid1","red","greenyellow","violet","steelblue4"), cex.names = .9)
