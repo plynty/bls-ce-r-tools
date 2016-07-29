@@ -240,6 +240,7 @@ for(x in 1:nrow(iAveragesByINCLASS)){
 test <- group_by(short, INCLASS) %>%
   summarise(BTINC = round(mean(FINCBTXM), digits = 2),
             ATINC = round(mean(FINCATXM), digits = 2))
+
 test$TOTEXP <- averagetotalExpenditures
 
 test$AfterTax <- test$ATINC/test$BTINC
