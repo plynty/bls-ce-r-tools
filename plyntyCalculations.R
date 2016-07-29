@@ -17,7 +17,7 @@ maxAge <- 64
 # Income brackets
 incomeBrackets <- c(5000,15000,53000,77000,86000,120000,180000,240000)
 
-changeString <- ""
+changeString <- "Age1Both"
 
 #####################################
 ### Reading in the necessary Data ###
@@ -49,9 +49,6 @@ fmly$INCLASS <- as.integer(fmly$INCLASS)
 
 # changing the income classes to fit our income brackets
 fmly <- changeIncomeClasses(fmly, incomeBreakpoints = incomeBrackets)
-
-# subsetting for the reference people who did work in the last 12 months
-fmly <- subsetByWhyNoWork(fmly, NA)
 
 ######################################
 ### Creating the plynty categories ###
@@ -151,6 +148,8 @@ mtab <- mutate(mtab,
                  iGIVNG = ifelse(UCC %in% iCharitableAndFamilyGiving, COST * 4, 0),
                  iPrinciple = ifelse(UCC %in% iHousingPrinciple, COST * -4, 0))
 
+mtab[is.na(mtab)] <- 0
+
 # Aggregate each expenditure variable by NEWID
 iExpensesByNEWID <- group_by(mtab, NEWID) %>%
   summarise(TOTEXPN = sum(iTOTEXPN),
@@ -167,6 +166,7 @@ iExpensesByNEWID <- group_by(mtab, NEWID) %>%
             EDUC = sum(iEDUC),
             GIVNG = sum(iGIVNG))
 
+iExpensesByNEWID[is.na(iExpensesByNEWID)] <- 0
 # Merge mtab with only the NEWIDs from the family file to include all NEWIDs
 iexpensesByNEWID <- select(fmly, NEWID, INCLASS) %>% left_join(., iExpensesByNEWID, by = "NEWID")
 
@@ -185,6 +185,8 @@ iAveragesByINCLASS <- group_by(iexpensesByNEWID, INCLASS) %>%
             INSUR = round(mean(INSUR), digits = 2),
             EDUC = round(mean(EDUC), digits = 2),
             GIVNG = round(mean(GIVNG), digits = 2))
+
+iAveragesByINCLASS[is.na(iAveragesByINCLASS)] <- 0
 
 # Ordering the iAverages data frame by income class
 iAveragesByINCLASS <- iAveragesByINCLASS[order(iAveragesByINCLASS$INCLASS),]
@@ -205,7 +207,7 @@ temp <- vector(length = length(3:ncol(iAveragesByINCLASS)))
 # Filling in the empty percentage matrix
 for(x in 1:nrow(iAveragesByINCLASS)){
   for(y in 3:ncol(iAveragesByINCLASS)){
-    temp[y-2] <- as.data.frame(iAveragesByINCLASS)[x,y]/as.data.frame(iAveragesByINCLASS)[x,2]
+    temp[y-2] <- as.data.frame(iAveragesByINCLASS)[x,y]/sum(as.data.frame(iAveragesByINCLASS)[x,3:ncol(iAveragesByINCLASS)])
   }
   percentageMatrix[x,] <- temp
 }
@@ -218,7 +220,6 @@ colnames(percentageDF) <- percentageColNames
 ########################################################
 ### Creating JSON and CSV File for use in plynty app ###
 ########################################################
-
 library.packages("df2json")
 setwd(my_dir)
 write(df2json(percentageDF), file = paste0("plynty",changeString,".json"))
