@@ -225,6 +225,26 @@ setwd(my_dir)
 write(df2json(percentageDF), file = paste0("plynty",changeString,".json"))
 write.csv(percentageDF, file = paste0("plynty",changeString,".csv"))
 
+
+########################################
+### Caluclating the Income discounts ###
+########################################
+
+short <- select(fmly, NEWID, INCLASS, FINCBTXM, FINCATXM)
+
+averagetotalExpenditures <- vector()
+for(x in 1:nrow(iAveragesByINCLASS)){
+  averagetotalExpenditures <- c(averagetotalExpenditures,sum(as.data.frame(iAveragesByINCLASS)[x,3:ncol(iAveragesByINCLASS)]))
+}
+
+test <- group_by(short, INCLASS) %>%
+  summarise(BTINC = round(mean(FINCBTXM), digits = 2),
+            ATINC = round(mean(FINCATXM), digits = 2))
+test$TOTEXP <- averagetotalExpenditures
+
+test$AfterTax <- test$ATINC/test$BTINC
+test$AggTotal <- test$TOTEXP/test$BTINC
+
 #############################################################
 ########## Deciding which income brackets to choose #########
 ### Comment out if the income brackets are to your liking ###
