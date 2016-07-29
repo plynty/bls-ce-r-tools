@@ -213,12 +213,14 @@ percentageDF <- as.data.frame(percentageMatrix)
 rownames(percentageDF) <- percentageRowNames
 colnames(percentageDF) <- percentageColNames
 
-################################################
-### Creating JSON File for use in plynty app ###
-################################################
+########################################################
+### Creating JSON and CSV File for use in plynty app ###
+########################################################
+
 library.packages("df2json")
 setwd(my_dir)
-write(df2json(percentageDF), file = "plynty.json")
+write(df2json(percentageDF), file = paste0("plynty",changeString,".json"))
+write.csv(percentageDF, file = paste0("plynty",changeString,".csv"))
 
 #############################################################
 ########## Deciding which income brackets to choose #########
