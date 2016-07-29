@@ -17,6 +17,8 @@ maxAge <- 64
 # Income brackets
 incomeBrackets <- c(5000,15000,53000,77000,86000,120000,180000,240000)
 
+changeString <- ""
+
 #####################################
 ### Reading in the necessary Data ###
 #####################################
